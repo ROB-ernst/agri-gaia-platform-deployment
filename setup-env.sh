@@ -60,7 +60,7 @@ if [[ "${ssl_mode}" == "lets-encrypt"* || "${ssl_mode}" == "http-acme-eab" ]]; t
   read -rp "ACME email: " -e acme_email
 fi
 
-if [[ "${ssl_mode}" == "lets-encrypt-http" ]]; then
+if [[ "${ssl_mode}" == "lets-encrypt-http" ]] || [[ "${ssl_mode}" == "issued" ]]; then
   :
 elif [[ "${ssl_mode}" == "lets-encrypt-dns" ]]; then
   echo ""

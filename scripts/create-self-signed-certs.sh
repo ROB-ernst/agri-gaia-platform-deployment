@@ -13,6 +13,6 @@
 
 echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 
-cd "${AG_SOURCE_DIR}/platform/config/traefik/certs/self-signed/wildcard" || exit 1
+cd "${AG_SOURCE_DIR}/platform/secrects/certs/self-signed" || exit 1
 rm ./*.srl ./*.crt ./*.csr ./*.key ./*.ext ./*.pem
-chmod +x generate.sh && ./generate.sh -d "${AG_PROJECT_BASE_URL}" -f
+chmod +x generate.sh && /bin/bash generate.sh -d "${AG_PROJECT_BASE_URL}" -f

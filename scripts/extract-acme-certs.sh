@@ -15,18 +15,9 @@ echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 
 dump_acme_path="${AG_DEPLOY_SCRIPT_DIR}/third-party/dump-acme.sh"
 
-cd "${AG_SOURCE_DIR}/platform/config/traefik/certs" || exit 1
+cd "${AG_SOURCE_DIR}/platform/secrects/certs/acme" || exit 1
 
-# No wildcard certs possible via HTTP-01 challenge.
-if [[ "${AG_SSL_MODE}" == "lets-encrypt-dns" ]]; then
-  certs_subpath="acme/wildcard"
-else
-  certs_subpath="acme/domains"
-fi
-
-mkdir -p "${certs_subpath}" \
-  && cd "${certs_subpath}" \
-  && /bin/bash "${dump_acme_path}" "${AG_SOURCE_DIR}/platform/acme/acme.json" . \
+/bin/bash "${dump_acme_path}" acme.json . \
   && chmod -R 644 ssl/* \
   && mv ssl/* . \
   && rm -rf ssl

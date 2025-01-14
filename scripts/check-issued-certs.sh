@@ -13,7 +13,12 @@
 
 echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 
-cd "${AG_SOURCE_DIR}/platform/config/traefik/certs/issued/wildcard" || exit 1
+cd "${AG_SOURCE_DIR}/platform/secrects/certs/issued" || exit 1
 
-# Check if issued wildcard certificates with AG_PROJECT_BASE_URL as prefix exist.
-test -z "$(find . -maxdepth 1 -name "${AG_PROJECT_BASE_URL}.*" -print -quit)" && exit 2
+# Rename any *.crt and *.key files to start with AG_PROJECT_BASE_URL
+mv ./*.crt "${AG_PROJECT_BASE_URL}.crt"
+mv ./*.key "${AG_PROJECT_BASE_URL}.key"
+
+# Check if issued certificate and key with AG_PROJECT_BASE_URL as prefix exist.
+test -z "$(find . -maxdepth 1 -name "${AG_PROJECT_BASE_URL}.crt" -print -quit)" && exit 2
+test -z "$(find . -maxdepth 1 -name "${AG_PROJECT_BASE_URL}.key" -print -quit)" && exit 3

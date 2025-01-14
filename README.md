@@ -77,12 +77,16 @@ The Agri-Gaia platform needs files that contain secrets such as the `keystore.jk
 
 and place the secrets files that are described in the platform repository in this directory. The deployment process will find them there and include them into the platform.
 
-At this point in time the `AG_SOURCE_DIR` should contain the following three directories:
+**Optional**: If you plan to use already issued wildcard TLS certificates (`AG_SSL_MODE=issued`) and don't want to create your own private fork of the `agri-gaia-platform` repository, create the subdirectory `/opt/agri-gaia/secrets/certs/issued` and place your `.crt` und `.key` files into that directory. The filenames can be arbitrary, as the deployment process will read the `AG_PROJECT_BASE_URL` from your custom deployment `.env` file.
+
+At this point in time the `AG_SOURCE_DIR` should contain the following three directories with `secrets/certs/*` being optional (see above):
 
 ```text
 /opt/agri-gaia/
 ├── deploy
 └── secrets
+    └── certs
+        └── issued
 ```
 
 ## Run `deploy.sh`

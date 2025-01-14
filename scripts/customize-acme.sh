@@ -28,15 +28,10 @@ elif [[ "${AG_SSL_MODE}" == "http-acme-eab" ]]; then
   sed -i "s/ACME_EAB_HMACENCODED=.*/ACME_EAB_HMACENCODED=${AG_ACME_EAB_HMACENCODED}/g" .env
 fi
 
-# Rename dummy certs to match AG_PROJECT_BASE_URL
-# Will be replaced by certs from acme.json
+# Create self-signed certificates for services that are not managed through Traefik's ACME
+# but require a TLS certificate to function properly. This is not required for self-signed (wildcard)
+# and issued certificates (user's responsibility).
+create_cert_path="${AG_DEPLOY_SCRIPT_DIR}/third-party/create-certificate.sh"
+acme_certs_path="${AG_SOURCE_DIR}/platform/secrects/certs/acme"
 
-acme_certs_path="${AG_SOURCE_DIR}/platform/config/traefik/certs/acme"
-
-cd "${acme_certs_path}/wildcard" || exit 2
-mv ./*.crt "${AG_PROJECT_BASE_URL}.crt"
-mv ./*.key "${AG_PROJECT_BASE_URL}.key"
-
-cd "${acme_certs_path}/domains" || exit 3
-find . -type f -name "registry.*.crt" -exec mv '{}' "registry.${AG_PROJECT_BASE_URL}.crt" \;
-find . -type f -name "registry.*.key" -exec mv '{}' "registry.${AG_PROJECT_BASE_URL}.key" \;
+/bin/bash "${create_cert_path}" "registry.${AG_PROJECT_BASE_URL}" "${acme_certs_path}"

@@ -13,10 +13,10 @@
 
 echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 
-cd "${AG_SOURCE_DIR}/platform/config/traefik" || exit 1
+cd "${AG_SOURCE_DIR}/platform/services/traefik" || exit 1
 sed -i "s/agri-gaia.localhost/${AG_PROJECT_BASE_URL}/g" dynamic.yaml
 
-# Add strict SNI checking for not self-signed certs and remove
+# Add strict SNI checking for non self-signed certs and remove
 # default certificate store if non-local certs are used (e. g. LetsEncrypt).
 if [[ "${AG_SSL_MODE}" != "self-signed" ]]; then
   yq e -i '.tls.options.default.sniStrict = true' dynamic.yaml

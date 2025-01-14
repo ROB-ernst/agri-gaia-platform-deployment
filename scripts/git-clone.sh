@@ -17,8 +17,8 @@ cd "${AG_SOURCE_DIR}" || exit 1
 
 # If platform directory exists
 if [[ -d platform ]]; then
-    # If acme.json is a non-empty file, backup acme directory
-    [[ -f platform/acme/acme.json && -s platform/acme/acme.json ]] && mv platform/acme .
+    # Always backup certs
+    mv platform/secrects/certs .
 
     # Remove platform git directory
     rm -rf platform
@@ -60,11 +60,14 @@ git config submodule.services/frontend.url "${frontend_submodule_base}/${AG_GIT_
 
 git submodule update
 
-# If acme backup exists, always restore it
-[[ -d ../acme ]] && mv ../acme .
+# If certs backup exists, always restore it
+if [[ -d ../certs ]]; then
+    rm -rf secrects/certs && \
+        mv ../certs secrects
+fi
 
-# Copy secrets into platform/secrets
-cp -r ../secrets .
+# Merge contents of deployment secrets into platform/secrets
+rsync -avhP --checksum ../secrets/ ./secrects/
 
 cd services/frontend || exit 6
 git submodule update --init

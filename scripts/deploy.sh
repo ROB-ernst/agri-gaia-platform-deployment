@@ -79,13 +79,13 @@ acme_ssl_mode() {
 }
 
 if [[ "${AG_SSL_MODE}" == "self-signed" ]]; then
-  if [[ "${AG_CREATE_SELF_SIGNED}" == true ]]; then
-    time ./create-self-signed-certs.sh || exit 12
-  fi
+    if [[ "${AG_CREATE_SELF_SIGNED}" == true ]]; then
+        time ./create-self-signed-certs.sh || exit 12
+    fi
 elif [[ "${AG_SSL_MODE}" == "issued" ]]; then
-  time ./check-issued-certs.sh || exit 13
+    time ./check-issued-certs.sh || exit 13
 elif acme_ssl_mode; then
-  time ./customize-acme.sh || exit 14
+    time ./customize-acme.sh || exit 14
 else
   echo "Unsupported SSL mode: ${AG_SSL_MODE}"; exit 15
 fi

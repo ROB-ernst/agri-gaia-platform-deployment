@@ -21,14 +21,14 @@ docker builder prune --force
 
 # Remove stopped containers
 [[ "${AG_REMOVE_STOPPED_CONTAINERS}" == true ]] \
-  && docker container prune --force
+    && docker container prune --force
 
 # Remove source files by deleting cloned git repo
-# but do not remove acme certificate
+# but do not remove secrets
 if [[ "${AG_REMOVE_SOURCE_FILES}" == true ]]; then
     cd "${AG_SOURCE_DIR}" || exit 1
-    mv ./platform/acme . 2> /dev/null
-    rm -rf ./platform/*
-    rm -rf ./platform/.* 2>/dev/null
-    mv ./acme ./platform 2> /dev/null
+    [[ -d platform/secrets ]] && rsync -avhP --checksum platform/secrets/ secrets/
+    rm -rf platform/*
+    rm -rf platform/.* 2>/dev/null
+    [[ -d secrets ]] && rsync -avhP --checksum secrets/ platform/secrets/
 fi

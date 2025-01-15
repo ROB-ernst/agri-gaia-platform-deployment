@@ -15,10 +15,10 @@ echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 
 cd "${AG_SOURCE_DIR}" || exit 1
 
-# If platform directory exists
+# If secrets in platform directory exist
 if [[ -d platform ]]; then
-    # Always backup certs
-    mv platform/secrects/certs .
+    # Always backup secrets
+    [[ -d platform/secrets ]] && rsync -avhP --checksum platform/secrets/ secrets/
 
     # Remove platform git directory
     rm -rf platform
@@ -30,6 +30,7 @@ else
     git_clone_url="https://${AG_GIT_BASE_URL}/${AG_GIT_ORGANIZATION}/${AG_GIT_REPOSITORY_PLATFORM}.git"
 fi
 
+echo "Attempting to clone '${git_clone_url}' into 'platform'..."
 git_clone_exit_code=0
 git clone "${git_clone_url}" platform
 git_clone_exit_code=$?
@@ -40,7 +41,7 @@ git_clone_exit_code=$?
 cd platform || exit 4
 
 git fetch --all
-git checkout "${AG_GIT_BRANCH_PLATFORM}" || exit 5
+git checkout "${AG_GIT_BRANCH_PLATFORM}" -- || exit 5
 git submodule init
 
 if [[ "${AG_GIT_PUBLIC_REPOSITORIES}" == false ]]; then
@@ -60,14 +61,8 @@ git config submodule.services/frontend.url "${frontend_submodule_base}/${AG_GIT_
 
 git submodule update
 
-# If certs backup exists, always restore it
-if [[ -d ../certs ]]; then
-    rm -rf secrects/certs && \
-        mv ../certs secrects
-fi
-
 # Merge contents of deployment secrets into platform/secrets
-rsync -avhP --checksum ../secrets/ ./secrects/
+[[ -d ../secrets ]] && rsync -avhP --checksum ../secrets/ secrets/
 
 cd services/frontend || exit 6
 git submodule update --init

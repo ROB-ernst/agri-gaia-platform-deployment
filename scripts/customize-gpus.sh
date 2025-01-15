@@ -14,9 +14,9 @@
 echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 
 if [[ "${AG_GPUS}" != "all" ]]; then
-  num_gpus=$(("$(echo "${AG_GPUS}" | awk -F"," '{print NF-1}')" + 1))
-  (("${num_gpus}" > "${AG_MAX_GPUS}")) \
-    && { echo "More GPUs requested (${num_gpus}) than actually present (${AG_MAX_GPUS})."; exit 2; }
+    num_gpus=$(("$(echo "${AG_GPUS}" | awk -F"," '{print NF-1}')" + 1))
+    (("${num_gpus}" > "${AG_MAX_GPUS}")) \
+        && { echo "More GPUs requested (${num_gpus}) than actually present (${AG_MAX_GPUS})."; exit 2; }
 fi
 
 cd "${AG_SOURCE_DIR}/platform" || exit 3

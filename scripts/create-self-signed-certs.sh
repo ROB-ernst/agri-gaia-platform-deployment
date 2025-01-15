@@ -13,6 +13,11 @@
 
 echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 
-cd "${AG_SOURCE_DIR}/platform/secrects/certs/self-signed" || exit 1
-rm ./*.srl ./*.crt ./*.csr ./*.key ./*.ext ./*.pem
-chmod +x generate.sh && /bin/bash generate.sh -d "${AG_PROJECT_BASE_URL}" -f
+create_wildcard_cert_path="${AG_DEPLOY_SCRIPT_DIR}/third-party/create-wildcard-certificate.sh"
+self_signed_certs_path="${AG_SOURCE_DIR}/platform/secrets/certs/self-signed"
+
+rm "${self_signed_certs_path}/*"
+/bin/bash "${create_wildcard_cert_path}" \
+    -d "${AG_PROJECT_BASE_URL}" \
+    -o "${self_signed_certs_path}" \
+    -f

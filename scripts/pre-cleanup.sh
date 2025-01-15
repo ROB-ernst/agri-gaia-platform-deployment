@@ -20,7 +20,9 @@ eval "${remove_dangling_volumes_cmd}"
 
 # Remove dangling volumes regulary (every 3 hours) via cron if platform is running
 if ! crontab -l | grep -q "remove-dangling-volumes.sh"; then
-  crontab -l | { cat; echo "0 */3 * * * ${remove_dangling_volumes_cmd}"; } | crontab -
+    crontab -l \
+        | { cat; echo "0 */3 * * * ${remove_dangling_volumes_cmd}"; } \
+        | crontab -
 fi
 
 # Make sure to remove the network associated with the Docker Compose project.
@@ -28,10 +30,10 @@ fi
 compose_project_network="${compose_project_name}_network"
 network_id=$(docker network ls --filter name="${compose_project_network}" -q)
 if [[ -n "${network_id}" ]]; then
-  docker network inspect "${compose_project_network}" \
-    | jq -r '.[0].Containers | keys[]' \
-    | xargs -I {} docker network disconnect -f "${compose_project_network}" {}
-  docker network rm ${network_id}
+    docker network inspect "${compose_project_network}" \
+        | jq -r '.[0].Containers | keys[]' \
+        | xargs -I {} docker network disconnect -f "${compose_project_network}" {}
+    docker network rm ${network_id}
 else
     echo "No network to remove!"
 fi
@@ -46,26 +48,26 @@ else
 fi
 
 if [[ "${AG_REMOVE_UNMANAGED_CONTAINERS}" == true ]]; then
-  docker ps --filter name="^nuclio-" -q | xargs -I {} docker stop {}
-  docker ps -a --filter name="^nuclio-" -q | xargs -I {} docker rm --force {}
+    docker ps --filter name="^nuclio-" -q | xargs -I {} docker stop {}
+    docker ps -a --filter name="^nuclio-" -q | xargs -I {} docker rm --force {}
 
-  docker ps --filter name="^${compose_project_name}-jupyter-" -q | xargs -I {} docker stop {}
-  docker ps -a --filter name="^${compose_project_name}-jupyter-" -q | xargs -I {} docker rm --force {}
+    docker ps --filter name="^${compose_project_name}-jupyter-" -q | xargs -I {} docker stop {}
+    docker ps -a --filter name="^${compose_project_name}-jupyter-" -q | xargs -I {} docker rm --force {}
 fi
 
 if [[ "${AG_COMPOSE_DOWN_FLAGS}" == *"-v"* ]]; then
-  volumes=$(docker volume ls --filter name="${compose_project_name}" -q)
+    volumes=$(docker volume ls --filter name="${compose_project_name}" -q)
 
-  if [[ -n "${volumes}" ]]; then
-      docker volume rm --force ${volumes}
-  else
-      echo "No volumes to remove!"
-  fi
+    if [[ -n "${volumes}" ]]; then
+        docker volume rm --force ${volumes}
+    else
+        echo "No volumes to remove!"
+    fi
 
-  # Avoid "volume is in use" by unmanaged container if container is not removed
-  if [[ "${AG_REMOVE_UNMANAGED_CONTAINERS}" == true ]]; then
-    # Remove unmanaged volumes
-    docker volume ls --filter name="^nuclio-" -q \
-      | xargs -I {} docker volume rm --force {}
-  fi
+    # Avoid "volume is in use" by unmanaged container if container is not removed
+    if [[ "${AG_REMOVE_UNMANAGED_CONTAINERS}" == true ]]; then
+        # Remove unmanaged volumes
+        docker volume ls --filter name="^nuclio-" -q \
+            | xargs -I {} docker volume rm --force {}
+    fi
 fi

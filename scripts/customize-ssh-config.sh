@@ -20,10 +20,10 @@ if ! grep -q "Host platform.${AG_GIT_BASE_URL}" "${ssh_config}"; then
 cat >> "${ssh_config}" <<EOL
 
 Host platform.${AG_GIT_BASE_URL}
-  HostName ${AG_GIT_BASE_URL}
-  User git
-  IdentityFile ${HOME}/.ssh/agri-gaia/platform/id_ed25519
-  IdentitiesOnly yes
+	HostName ${AG_GIT_BASE_URL}
+	User git
+	IdentityFile ${HOME}/.ssh/agri-gaia/platform/id_ed25519
+	IdentitiesOnly yes
 EOL
 fi
 
@@ -31,10 +31,10 @@ if ! grep -q "Host backend.${AG_GIT_BASE_URL}" "${ssh_config}"; then
 cat >> "${ssh_config}" <<EOL
 
 Host backend.${AG_GIT_BASE_URL}
-  HostName ${AG_GIT_BASE_URL}
-  User git
-  IdentityFile ${HOME}/.ssh/agri-gaia/backend/id_ed25519
-  IdentitiesOnly yes
+	HostName ${AG_GIT_BASE_URL}
+	User git
+	IdentityFile ${HOME}/.ssh/agri-gaia/backend/id_ed25519
+	IdentitiesOnly yes
 EOL
 fi
 
@@ -42,10 +42,10 @@ if ! grep -q "Host frontend.${AG_GIT_BASE_URL}" "${ssh_config}"; then
 cat >> "${ssh_config}" <<EOL
 
 Host frontend.${AG_GIT_BASE_URL}
-  HostName ${AG_GIT_BASE_URL}
-  User git
-  IdentityFile ${HOME}/.ssh/agri-gaia/frontend/id_ed25519
-  IdentitiesOnly yes
+	HostName ${AG_GIT_BASE_URL}
+	User git
+	IdentityFile ${HOME}/.ssh/agri-gaia/frontend/id_ed25519
+	IdentitiesOnly yes
 EOL
 fi
 

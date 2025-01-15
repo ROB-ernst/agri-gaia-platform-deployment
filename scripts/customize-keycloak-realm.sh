@@ -16,7 +16,7 @@ echo "$(date +"%Y-%m-%d %H:%M:%S.%6N") - ${0}"
 cd "${AG_SOURCE_DIR}/platform/services/keycloak/realm-export" || exit 1
 
 jq \
-  --argjson registrationAllowed "${AG_ALLOW_REGISTRATION}" \
-  '.registrationAllowed = $registrationAllowed' \
-  realm-export.json > tmp && \
-  mv tmp realm-export.json
+    --argjson registrationAllowed "${AG_ALLOW_REGISTRATION}" \
+    '.registrationAllowed = $registrationAllowed' \
+    realm-export.json > tmp && \
+    mv tmp realm-export.json

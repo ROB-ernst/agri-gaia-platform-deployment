@@ -21,12 +21,12 @@ docker_config_dirs=("${HOME}/.docker")
 
 for docker_config_dir in "${docker_config_dirs[@]}"
 do
-  mkdir -p "${docker_config_dir}"
-  cd "${docker_config_dir}" || exit 1
+    mkdir -p "${docker_config_dir}"
+    cd "${docker_config_dir}" || exit 1
 
-  [[ ! -f "config.json" ]] && echo "{}" > "config.json"
-  nvidia_ngc_auth="$(echo -n '$oauthtoken:'"${AG_NVIDIA_NGC_API_KEY}" | base64 -w 0)"
+    [[ ! -f "config.json" ]] && echo "{}" > "config.json"
+    nvidia_ngc_auth="$(echo -n '$oauthtoken:'"${AG_NVIDIA_NGC_API_KEY}" | base64 -w 0)"
 
-  jq --arg nvidia_ngc_auth "${nvidia_ngc_auth}" '.auths."nvcr.io".auth = $nvidia_ngc_auth' config.json \
-    | sponge config.json
+    jq --arg nvidia_ngc_auth "${nvidia_ngc_auth}" '.auths."nvcr.io".auth = $nvidia_ngc_auth' config.json \
+        | sponge config.json
 done

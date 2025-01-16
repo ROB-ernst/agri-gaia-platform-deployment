@@ -19,7 +19,21 @@ sed -i "s/agri-gaia.localhost/${AG_PROJECT_BASE_URL}/g" dynamic.yaml
 # Add strict SNI checking for non self-signed certs and remove
 # default certificate store if non-local certs are used (e. g. LetsEncrypt).
 if [[ "${AG_SSL_MODE}" != "self-signed" ]]; then
-    yq e -i '.tls.options.default.sniStrict = true' dynamic.yaml
+    add_strict_sni_check=true
+    if [[ "${AG_SSL_MODE}" == "issued" ]]; then
+        issued_cert_path="${AG_SOURCE_DIR}/platform/secrets/certs/issued/${AG_PROJECT_BASE_URL}.crt"
+        san_count="$(openssl x509 -in "${issued_cert_path}" -text -noout \
+            | grep -A 1 "Subject Alternative Name" \
+            | grep -o "DNS:" \
+            | wc -l)"
+        # Do not add strict SNI checking for multi domain certificate
+        [[ "${san_count}" -gt 1 ]] && add_strict_sni_check=false
+    fi
+    
+    if [[ "${add_strict_sni_check}" == true ]]; then
+        yq e -i '.tls.options.default.sniStrict = true' dynamic.yaml
+    fi
+
     if [[ "${AG_SSL_MODE}" != "issued" ]]; then
         yq e -i 'del(.tls.stores)' dynamic.yaml
     fi

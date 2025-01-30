@@ -92,10 +92,10 @@ sed -i "s/FUSEKI_ADMIN_PASSWORD=.*/FUSEKI_ADMIN_PASSWORD=${AG_FUSEKI_ADMIN_PASSW
 sed -i "s/PORTAINER_ADMIN_PASSWORD=.*/PORTAINER_ADMIN_PASSWORD=${AG_PORTAINER_ADMIN_PASSWORD}/g" .env
 sed -i "s/GITHUB_TOKEN=.*/GITHUB_TOKEN=${AG_GITHUB_TOKEN}/g" .env
 
-sed -i "s/CONNECTOR_PASSWORD=.*/CONNECTOR_PASSWORD=${connector_password}/g" .env
-sed -i "s/PONTUSX_PASSWORD=.*/PONTUSX_PASSWORD=${pontusx_password}/g" .env
+sed -i "s/CONNECTOR_PASSWORD=.*/CONNECTOR_PASSWORD=${AG_EDC_ENDPOINT_PASSWORD}/g" .env
+sed -i "s/PONTUSX_PASSWORD=.*/PONTUSX_PASSWORD=${AG_PONTUSX_ENDPOINT_PASSWORD}/g" .env
 
-sed -i "s/KEYSTORE_PASSWORD=.*/KEYSTORE_PASSWORD=${connector_keystore_password}/g" .env
+sed -i "s/KEYSTORE_PASSWORD=.*/KEYSTORE_PASSWORD=${AG_EDC_KEYSTORE_PASSWORD}/g" .env
 
 # Customize services/backend/.env (cwd = $AG_SOURCE_DIR/platform/services/backend)
 cd services/backend || exit 2

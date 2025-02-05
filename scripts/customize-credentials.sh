@@ -43,13 +43,6 @@ agbot_token="$(generate_random_token 64)"
 backend_registry_token="$(generate_random_token 64)"
 backend_openid_client_secret="$(generate_random_token 64)"
 
-# Random static tokens seeded with MACHINE_ID
-connector_password="$(generate_random_token 64 "3L3691sM")"
-pontusx_password="$(generate_random_token 64 "en29zQVu")"
-
-#Adding edc keystore password
-connector_keystore_password="$(cat ${AG_SOURCE_DIR}/secrets/edc/keystore_password.txt)"
-
 # Htpasswd
 traefik_htpasswd=$(echo "${AG_TRAEFIK_PASSWORD}" | htpasswd -niB "${AG_TRAEFIK_USER}" | cut -f 2 -d ':')
 realm_service_account_htpasswd=$(echo "${AG_REALM_SERVICE_ACCOUNT_PASSWORD}" | htpasswd -niB service-account-realm | cut -f 2 -d ':')

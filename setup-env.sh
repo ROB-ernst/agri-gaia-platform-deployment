@@ -119,6 +119,10 @@ echo ""
 echo "Enter flags to use with 'docker compose down' (e.g. -v to delete volumes):"
 read -rp "Flags for 'docker compose down': " -e compose_down_flags
 
+echo ""
+echo "Please enter the password for your EDC keystore"
+read -rp "EDC keystore password: " -e edc_keystore_password
+
 generatePassword() {
 	< /dev/urandom tr -dc A-Za-z0-9 | head -c20
 }
@@ -171,6 +175,11 @@ AG_REALM_SERVICE_ACCOUNT_PASSWORD=$(generatePassword)
 
 AG_MINIO_ROOT_USER=${default_user}
 AG_MINIO_ROOT_PASSWORD=$(generatePassword)
+
+AG_EDC_KEYSTORE_PASSWORD=${edc_keystore_password}
+
+AG_EDC_ENDPOINT_PASSWORD=$(generatePassword)
+AG_PONTUSX_ENDPOINT_PASSWORD=$(generatePassword)
 
 AG_FUSEKI_ADMIN_USER=${default_user}
 AG_FUSEKI_ADMIN_PASSWORD=$(generatePassword)
